@@ -46,20 +46,46 @@ def mostrarEquipos():
               f"Estado: {x.get('estado')}"
               )
 
+#Funcion que elimina un equipo de la coleccion
+def eliminarEquipo():
+    db = conectar()
+    if db is None:
+        print("No se pudo conectar a la DB ❌ ")
+        return
+
+    coleccion = db["equipos"]
+    print("\n--- 🗑️ Eliminar un equipo 🗑️ ---")
+    modelo = input("Ingresa modelo del equipo a eliminar: ").strip()
+    equipo = coleccion.find_one({"modelo": modelo})
+    if equipo:
+        respuesta = input(f"Deseas eliminar el equipo {modelo} "
+                          f"del cliente {equipo.get('cliente')}? (s/n)"
+                          )
+        if respuesta == "s":
+            coleccion.delete_one({"_id": equipo["_id"]})
+            print("✔️  El equipo ha sido eliminado")
+        else:
+            print("❌  Operación cancelada")
+    else:
+        print("⚠️ No se encontro un equipo con ese modelo")
+
+
 
 #MENU DE OPCIONES (Esto se ejecuta por default)
 while True:
     print("\n--- 💻 Taller de Soporte y Mantenimiento 💻 ---")
     print("1. Agregar nuevos equipos")
     print("2. Mostrar equipos registrados")
-
+    print("3. Eliminar un equipo registrado")
     print("9. Salir del sistema")
-    
+
     opcion = input("Selecciona una opción: ")
     if opcion == "1":
         agregaEquipo()
     if opcion == "2":
         mostrarEquipos()
+    if opcion == "3":
+        eliminarEquipo()
 
     if opcion == "9":
         print("\nAdios! 👋 ")
