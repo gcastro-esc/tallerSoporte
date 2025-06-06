@@ -160,7 +160,7 @@ def actualizaReparacion():
                     "problema": nuevoProblema,
                     "solucion": nuevaSolucion,
                     "fecha": nuevaFecha,
-                    "costo": nuevaFecha
+                    "costo": nuevoCosto
                 }
             }
         )
