@@ -133,6 +133,41 @@ def eliminarReparacion():
         print("⚠️  No se encontro una orden de reparación para ese modelo")
 
 
+#Actualizacion de reparaciones
+def actualizaReparacion():
+    db = conectar()
+    if db is None:
+        print("No se pudo conectar a la BD ❌ ")
+        return
+    coleccion = db["reparaciones"] #Aqui cambia el nombre la colección
+    modelo = input("\nIngresa el modelo del equipo en repracion: ").strip()
+    r =  coleccion.find_one({"modeloEquipo": modelo})
+    if r:
+        print(f"\nOrden de reparación pertenece al cliente {r.get('cliente')}")
+        print("Ingresa los nuevos datos de la orden:")
+        nuevoCliente = input("Nuevo cliente: ").strip()
+        nuevoModelo = input("Nuevo modelo: ").strip()
+        nuevoProblema = input("Actualizacion del problema detectado: ").strip()
+        nuevaSolucion = input("Actualización de solución aplicada: ").strip()
+        nuevaFecha = input("Actualización de fecha de reparación: ").strip()
+        nuevoCosto = float(input("Nuevo costo asignado: $ "))
+        coleccion.update_one(
+            {"modeloEquipo": modelo},
+            {"$set":
+                {                   
+                    "cliente": nuevoCliente,
+                    "modeloEquipo": nuevoModelo,
+                    "problema": nuevoProblema,
+                    "solucion": nuevaSolucion,
+                    "fecha": nuevaFecha,
+                    "costo": nuevaFecha
+                }
+            }
+        )
+        print("✔️  Orden de reparación actualizada! 😎")
+    else:
+        print("❌  Orden de reparacion no encontrada 😢")
+
 #MENU DE OPCIONES (Esto se ejecuta por default)
 while True:
     print("\n--- 💻 Taller de Soporte y Mantenimiento 💻 ---")
@@ -142,6 +177,7 @@ while True:
     print("4. Agregar reporte de reparacion")
     print("5. Listado de reparaciones registradas")
     print("6. Eliminar orden de reparacion")
+    print("7. Actualizar datos de orden de reparación")
     print("9. Salir del sistema")
 
     opcion = input("Selecciona una opción: ")
@@ -157,6 +193,8 @@ while True:
         mostrarReparaciones()
     if opcion == "6":
         eliminarReparacion()
+    if opcion == "7":
+        actualizaReparacion()
     if opcion == "9":
         print("\nAdios! 👋 ")
         break
