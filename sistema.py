@@ -111,6 +111,28 @@ def mostrarReparaciones():
               )
 
 
+def eliminarReparacion():
+    db = conectar()
+    if db is None:
+        print("No se pudo conectar a la BD ❌ ")
+        return
+    coleccion = db["reparaciones"] #Aqui cambia el nombre la colección
+    print("--- 🗑 Eliminar una orden de reparación 🗑 ---")   
+    modelo = input("Ingresa modelo del equipo en reparación a eliminar: ")
+    equipo = coleccion.find_one({"modeloEquipo": modelo})
+    if equipo:
+        respuesta = input(f"Deseas eliminar la orden de reparacion del equipo {modelo} "
+                          f"del cliente {equipo.get('cliente')}? (s/n)"
+                          )
+        if respuesta == "s":
+            coleccion.delete_one({"_id": equipo["_id"]})
+            print("✔️  La orden de reparación ha sido eliminada")
+        else:
+            print("❌  Operación Cancelada")
+    else:
+        print("⚠️  No se encontro una orden de reparación para ese modelo")
+
+
 #MENU DE OPCIONES (Esto se ejecuta por default)
 while True:
     print("\n--- 💻 Taller de Soporte y Mantenimiento 💻 ---")
@@ -119,6 +141,7 @@ while True:
     print("3. Eliminar un equipo registrado")
     print("4. Agregar reporte de reparacion")
     print("5. Listado de reparaciones registradas")
+    print("6. Eliminar orden de reparacion")
     print("9. Salir del sistema")
 
     opcion = input("Selecciona una opción: ")
@@ -132,6 +155,8 @@ while True:
         agregarReparacion()
     if opcion == "5":
         mostrarReparaciones()
+    if opcion == "6":
+        eliminarReparacion()
     if opcion == "9":
         print("\nAdios! 👋 ")
         break
