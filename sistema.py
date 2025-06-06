@@ -85,7 +85,7 @@ def agregarReparacion():
     costo = float(input("Costo de la reparación $ "))
     nuevaReparacion = {
         "cliente": cliente,
-        "modelo": modelo,
+        "modeloEquipo": modelo,
         "problema": problema,
         "solucion": solucion,
         "fecha": fecha,
@@ -95,6 +95,22 @@ def agregarReparacion():
     print(f"\n✔️  Reporte registrado con el ID {registro.inserted_id}")
 
 
+def mostrarReparaciones():
+    db = conectar()
+    if db is None:
+        print("No se pudo conectar a la BD ❌ ")
+        return
+    coleccion = db["reparaciones"] #Aqui cambia el nombre la colección
+    reparaciones = coleccion.find()
+    print("\n--- 📝 Lista de Reparaciones Registradas 📝---")
+    for r in reparaciones:
+        print(f"Cliente: {r.get('cliente')} - Modelo: {r.get('modeloEquipo')}"
+              f"Problema detectado: {r.get('problema')} - "
+              f"Solución ejecutada: {r.get('solucion')} - "
+              f"Fecha de reparacion: {r.get('fecha')} - Costo ${r.get('costo')}"
+              )
+
+
 #MENU DE OPCIONES (Esto se ejecuta por default)
 while True:
     print("\n--- 💻 Taller de Soporte y Mantenimiento 💻 ---")
@@ -102,6 +118,7 @@ while True:
     print("2. Mostrar equipos registrados")
     print("3. Eliminar un equipo registrado")
     print("4. Agregar reporte de reparacion")
+    print("5. Listado de reparaciones registradas")
     print("9. Salir del sistema")
 
     opcion = input("Selecciona una opción: ")
@@ -113,6 +130,8 @@ while True:
         eliminarEquipo()
     if opcion == "4":
         agregarReparacion()
+    if opcion == "5":
+        mostrarReparaciones()
     if opcion == "9":
         print("\nAdios! 👋 ")
         break
