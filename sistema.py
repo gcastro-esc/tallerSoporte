@@ -70,6 +70,30 @@ def eliminarEquipo():
         print("⚠️ No se encontro un equipo con ese modelo")
 
 
+def agregarReparacion():
+    db = conectar()
+    if db is None:
+        print("No se pudo conectar a la BD ❌ ")
+        return
+    coleccion = db["reparaciones"] #Aqui cambia el nombre la colección
+    print("--- 📄 Registro de reporte de reparación 📄 ---")
+    cliente = input("Nombre del cliente: ").strip()
+    modelo = input("Modelo del equipo: ").strip()
+    problema = input("Problema encontrado: ").strip()
+    solucion = input("Solución de reparación: ").strip()
+    fecha = input("Fecha de reparación: ").strip()
+    costo = float(input("Costo de la reparación $ "))
+    nuevaReparacion = {
+        "cliente": cliente,
+        "modelo": modelo,
+        "problema": problema,
+        "solucion": solucion,
+        "fecha": fecha,
+        "costo": costo
+    }
+    registro = coleccion.insert_one(nuevaReparacion)
+    print(f"\n✔️  Reporte registrado con el ID {registro.inserted_id}")
+
 
 #MENU DE OPCIONES (Esto se ejecuta por default)
 while True:
@@ -77,6 +101,7 @@ while True:
     print("1. Agregar nuevos equipos")
     print("2. Mostrar equipos registrados")
     print("3. Eliminar un equipo registrado")
+    print("4. Agregar reporte de reparacion")
     print("9. Salir del sistema")
 
     opcion = input("Selecciona una opción: ")
@@ -86,7 +111,8 @@ while True:
         mostrarEquipos()
     if opcion == "3":
         eliminarEquipo()
-
+    if opcion == "4":
+        agregarReparacion()
     if opcion == "9":
         print("\nAdios! 👋 ")
         break
